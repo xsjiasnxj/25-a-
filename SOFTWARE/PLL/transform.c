@@ -39,18 +39,23 @@ void ab_to_abc(float alpha, float beta, float *a, float *b, float *c)
     *c = -1.0f * (*a + *b);
 }
 
-void dq_to_abc(float d, float q, float theta, float *a, float *b,float*c)
+void dq_to_abc(float d, float q, float theta, float *a, float *b, float *c)
 {
-    float alpha,beta;
-    dq_to_ab(d,q,theta,&alpha,&beta);
-    ab_to_abc(alpha,beta,a,b,c);
+    float alpha, beta;
+    dq_to_ab(d, q, theta, &alpha, &beta);
+    ab_to_abc(alpha, beta, a, b, c);
+}
+void abc_to_dq(float a, float b, float c, float theta, float *d, float *q)
+{
+    float alpha, beta;
+    abc_to_ab(a, b, c, &alpha, &beta);
+    ab_to_dq(alpha, beta, theta, d, q);
 }
 void line_to_abc(float ab, float bc,  float *a, float*c)
 {
     *a=(ab*2+bc)/3;
-    *c=(bc*2+ab)/3;
+    *c=(-1)*(bc*2+ab)/3;
 }
-
 
 //float arm_cos_f32(float theta)
 //{

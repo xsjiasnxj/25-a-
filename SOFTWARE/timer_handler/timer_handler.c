@@ -31,8 +31,8 @@ static uint32_t sample_index = 0;
 
 // 采样 + 控制
 void TIM2_IRQHandler(void) {
-     /********************** 作调试用 ************************************/
-cnt++;
+    /********************** 作调试用 ************************************/
+    cnt++;
     /*******************************************************************/
   if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET) { // 溢出中断
     
@@ -43,32 +43,45 @@ cnt++;
         internal_theta-=2*M_PI;
     }
     // 采样数据
-    ac1_voltage_ab = adc_real[0];
-    ac1_voltage_bc = adc_real[2];
-    // 将采样值存入数组
-    voltage_samples[sample_index++] = ac1_voltage_ab;
+    ac_voltage_ab = adc_real[0];
+    ac_voltage_bc = adc_real[1];
+    ac_current_a = adc_real[2];
+    ac_current_b = adc_real[3];
 
+    // 数据预处理
+    line_to_abc(ac_voltage_ab, ac_voltage_bc, &ac_voltage_a, &ac_voltage_c);// 计算a相和c相电压
+    ac_voltage_b = -(ac_voltage_a + ac_voltage_c);// 计算b相电压
+    ac_current_c = -(ac_current_a + ac_current_b);// 计算c相电流
+
+    // 将采样值存入数组
+    voltage_samples[sample_index++] = ac_voltage_ab;
     // 如果采样数组已满，计算RMS值
     if (sample_index >= 1000) {
-      arm_rms_f32(voltage_samples, 1000, &ac1_vrms);
+      arm_rms_f32(voltage_samples, 1000, &ac_vrms);
       sample_index = 0; // 重置采样索引
     }
-    if(on_off&&reset_flag==1)
-    {
-        reset_svpwm();
-        reset_flag=0;
 
-    }
-    if(on_off&&reset_flag==0)
-    {
+    // 锁相环计算
+    abc_to_dq(ac_voltage_a, ac_voltage_b, ac_voltage_c, theta, &ac_voltage_d, &ac_voltage_q);
+    pll(&pll_v, ac_voltage_q, &omega, &theta); // 电压锁相环
+
+    // 开关逻辑
+    if (on_off) {
+      if (reset_flag) {
+        reset_svpwm();
+        reset_flag = 0;
+      }
       control();
       start_svpwm();
-    }
-    if(on_off==0)
-    {
-      pid_init(&pid1, kp1, ki1, kd1);
+    } else {
       stop_svpwm();
-      reset_flag=1;
+      reset_flag = 1;
+      if (mode == 1) {
+        pid_init(&pid1, kp1, ki1, kd1);
+      } else if (mode == 2) {
+        pid_init(&pid2, kp2, ki2, kd2);
+        pid_init(&pid3, kp3, ki3, kd3);
+      }
     }
   }
   TIM_ClearITPendingBit(TIM2, TIM_IT_Update); // 清除中断标志位
@@ -77,7 +90,7 @@ cnt++;
 // 按键检测 + 显示
 void TIM3_IRQHandler(void) {
   if (TIM_GetITStatus(TIM3, TIM_IT_Update) == SET) { // 溢出中断
-      vofa_databuffer[0]=ac1_vrms;
+      vofa_databuffer[0]=ac_vrms;
       Vofa_JustFloat(&vofa1,vofa_databuffer,1);
      
         OLED_Clear();

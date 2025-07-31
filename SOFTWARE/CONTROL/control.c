@@ -27,11 +27,20 @@ void control()
 //   	set_ac_a = pr_realize(&pr1,target_ac1_voltage_a,ac1_voltage_a)*2100;
 //    set_ac_c = pr_realize(&pr2,target_ac1_voltage_c,ac1_voltage_c)*2100;
 //    set_ac_b = (-set_duty_a-set_duty_c)*2100;
-    v1_gain = v1_gain - pid_limited(&pid1, target_ac1_vrms , ac1_vrms, v1_gain, -10000.0f, 10000.0f);
-    theta = internal_theta;
-    set_ac_a = v1_gain*arm_sin_f32(theta)*18;
-    set_ac_b = v1_gain*arm_sin_f32(theta-M_PI*2/3)*18;
-    set_ac_c = v1_gain*arm_sin_f32(theta+M_PI*2/3)*18;
+	if(mode==1)//逆变模式
+	{
+		v1_gain = v1_gain - pid_limited(&pid1, target_ac_vrms, ac_vrms, v1_gain, -10000.0f, 10000.0f);
+		theta = internal_theta;
+		set_ac_a = v1_gain * arm_sin_f32(theta) * 18;
+		set_ac_b = v1_gain * arm_sin_f32(theta - M_PI * 2 / 3) * 18;
+		set_ac_c = v1_gain * arm_sin_f32(theta + M_PI * 2 / 3) * 18;
+	}
+	else if(mode==2)//整流模式
+	{
+		abc_to_dq(ac_current_a, ac_current_b, ac_current_c, theta, &ac_current_d, &ac_current_q);
+		
+	}
+
 }
 
 void start_svpwm()

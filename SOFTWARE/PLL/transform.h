@@ -20,5 +20,8 @@ void ab_to_abc(float alpha, float beta, float *a, float *b, float *c);
 
 void dq_to_abc(float d, float q, float theta, float *a, float *b,float*c);
 
+void abc_to_dq(float a, float b, float c, float theta, float *d, float *q);
+
 void line_to_abc(float ab, float bc,  float *a, float*c);
+
 #endif //SVPWM_TRANSFORM_H

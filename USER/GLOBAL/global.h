@@ -80,7 +80,6 @@
 #define kd6 0.0f
     
 
-
 //标志位变量
 extern uint16_t pll_is_locked;
 extern char test_flag;
@@ -112,68 +111,57 @@ extern float  Compensation[8];
 //外部库
 extern prtype pr1,pr2,pr3,pr4;
 extern pidtype pid1,pid2,pid3,pid4,pid5,pid6;
-extern NotchFilter nf1;
-extern svpwmtype svpwm1,svpwm2;
 //锁相变量
 extern plltype  pll_v,pll_v3;
-extern sogitype sogi1;
-//输入信号
-extern float ac1_voltage_ab;
-extern float ac1_voltage_bc;
-extern float ac1_voltage_ca;
-extern float ac1_voltage_peak;
+// 输入信号
+//电压采样
+extern float ac_voltage_ab;
+extern float ac_voltage_bc;
+extern float ac_voltage_ca;
 
-extern float ac1_voltage_a;
-extern float ac1_voltage_b;
-extern float ac1_voltage_c;
+extern float ac_voltage_a;
+extern float ac_voltage_b;
+extern float ac_voltage_c;
 
-extern float ac2_voltage;
-extern float ac1_current;
-extern float ac1_vrms;
- 
+extern float ac_voltage_alpha;
+extern float ac_voltage_beta;
+extern float ac_voltage_d;
+extern float ac_voltage_q;
+
+extern float ac_voltage_peak;
+extern float ac_vrms;
+
+//电流采样
+extern float ac_current_a;
+extern float ac_current_b;
+extern float ac_current_c;
+
+extern float ac_current_alpha;
+extern float ac_current_beta;
+extern float ac_current_d;
+extern float ac_current_q;
+
+extern float ac_current_peak;
+extern float ac_crms;
+
 //期望输出
 extern float target_frequent;
-extern float target_ac1_voltage_a;
-extern float target_ac1_voltage_b;
-extern float target_ac1_voltage_c;
- 
-extern float target_ac1_vrms;
-extern float target_ac2_vrms;
-extern float target_ac1_current;
+extern float target_ac_vrms;
+extern float target_ac_current;
 
-//电压内角（离网模式）
+// 调制波形输出
+extern float outputwave_ac_current_d;
+extern float outputwave_ac_current_q;
+
+//电压内角（离/并网模式）
 extern float internal_theta;
 extern float theta;
 extern float omega;
-
-extern float ac1_voltage_alpha;
-extern float ac1_voltage_beta;
-
-extern float ac1_voltage_d;
-extern float ac1_voltage_q;
-
-extern float ac2_voltage_alpha;
-extern float ac2_voltage_beta;
-extern float ac2_voltage_d;
-extern float ac2_voltage_q;
- 
-extern float ac1_current_alpha;
-extern float ac1_current_beta;
-extern float ac1_current_d;
-extern float ac1_current_q;
-
-extern float ac2_current_alpha;
-extern float ac2_current_beta;
-extern float ac2_current_d;
-extern float ac2_current_q;
-
-//调制波形
-extern float output_wave;
-
 
 //显示变量
 extern unsigned char menu_index;
 extern unsigned char input_buffer[10];
 extern unsigned char input_index;
 extern unsigned disp_page;
+
 #endif

@@ -35,18 +35,16 @@ void bsp_Init() {
   GPIO_Config_Init();
   EXTIX_Init();
   OLED_Init();
-  sogi_init(&sogi1,Ts,omega);
   uart_init(2000000);
-  notch_filter_init(&nf1,200*M_PI,0.707,Ts);
   TIM1_Config_Init(); // 专门用于PWM输出
   TIM2_Config_Init(); // 专门用于数据采样+计算+控制
   TIM3_Config_Init(); // 专门用于显示
     
   pid_init(&pid1, kp1, ki1, kd1);
-  pr_init(&pr1,kp_pr1,kr_pr1,100*M_PI,2*M_PI,Ts);
-  pr_init(&pr2 ,kp_pr2,kr_pr2,100*M_PI,2*M_PI,Ts);   
-  pll_init(&pll_v, Ts, 100, 80);
-  svpwm_init(&svpwm1,30, Ts);
+  pid_init(&pid2, kp2, ki2, kd2);
+  pid_init(&pid3, kp3, ki3, kd3);
+  pll_init(&pll_v, Ts, 100, 100);
+
 
   OLED_Clear();
 }
