@@ -45,13 +45,13 @@ void TIM2_IRQHandler(void) {
     // 采样数据
     ac_voltage_ab = adc_real[0];
     ac_voltage_bc = adc_real[1];
-    ac_current_a = adc_real[2];
-    ac_current_b = adc_real[3];
+    ac_current_b = adc_real[2];
+    ac_current_c = adc_real[3];
 
     // 数据预处理
     line_to_abc(ac_voltage_ab, ac_voltage_bc, &ac_voltage_a, &ac_voltage_c);// 计算a相和c相电压
     ac_voltage_b = -(ac_voltage_a + ac_voltage_c);// 计算b相电压
-    ac_current_c = -(ac_current_a + ac_current_b);// 计算c相电流
+    ac_current_a = -(ac_current_b + ac_current_c);// 计算c相电流
 
     // 将采样值存入数组
     voltage_samples[sample_index++] = ac_voltage_ab;
@@ -68,6 +68,10 @@ void TIM2_IRQHandler(void) {
     // 开关逻辑
     if (on_off) {
       if (reset_flag) {
+        if(mode==2)
+        {
+          outputwave_ac_current_d = -35.0f;
+        }
         reset_svpwm();
         reset_flag = 0;
       }

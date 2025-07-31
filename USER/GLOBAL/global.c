@@ -1,7 +1,6 @@
 #include "stm32f4xx.h"
 #include "global.h"
-#include "key.h"
-#include "IIR2.h"
+
 //标志位变量
 uint16_t pll_is_locked=0;
 char test_flag=0;
@@ -24,7 +23,6 @@ float adc_real[8]={0};
 uint16_t test_num;
 uint16_t filter_cnt=0;
 uint16_t timer_cnt=0;
-
 
 //采样还原参数(k,b，补偿)
 float  sample2real_k[8] = {0.10737575f, 0.1062f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f};
@@ -68,7 +66,6 @@ float ac_current_q = 0;
 
 float ac_current_peak = 0.0f;
 float ac_crms = 0.0f;
-
 
 
 //期望输出

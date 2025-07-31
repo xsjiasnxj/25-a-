@@ -21,7 +21,7 @@ float set_ac_c=0.0f;
 float max_duty = pwm_full_duty * 0.98f;
 float min_duty = pwm_full_duty * 0.02f;
 float v1_gain=0.0f;
-
+float i_gain=40.0f;
 void control()
 {
 //   	set_ac_a = pr_realize(&pr1,target_ac1_voltage_a,ac1_voltage_a)*2100;
@@ -38,7 +38,13 @@ void control()
 	else if(mode==2)//整流模式
 	{
 		abc_to_dq(ac_current_a, ac_current_b, ac_current_c, theta, &ac_current_d, &ac_current_q);
-		
+
+		outputwave_ac_current_d = outputwave_ac_current_d - pid_limited(&pid2, target_ac_current * sqrt2, ac_current_d, outputwave_ac_current_d, -1000.0f, 1000.0f);
+		outputwave_ac_current_q = outputwave_ac_current_q - pid_limited(&pid3, 0, ac_current_q, outputwave_ac_current_q, -1000.0f, 1000.0f);
+		dq_to_abc(outputwave_ac_current_d, outputwave_ac_current_q, theta, &set_ac_a, &set_ac_b, &set_ac_c);
+		set_ac_a*= i_gain;
+		set_ac_b*= i_gain;
+		set_ac_c*= i_gain;
 	}
 
 }

@@ -45,7 +45,6 @@ void bsp_Init() {
   pid_init(&pid3, kp3, ki3, kd3);
   pll_init(&pll_v, Ts, 100, 100);
 
-
   OLED_Clear();
 }
 

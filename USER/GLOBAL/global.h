@@ -111,6 +111,7 @@ extern float  Compensation[8];
 //外部库
 extern prtype pr1,pr2,pr3,pr4;
 extern pidtype pid1,pid2,pid3,pid4,pid5,pid6;
+
 //锁相变量
 extern plltype  pll_v,pll_v3;
 // 输入信号
