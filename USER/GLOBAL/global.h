@@ -42,43 +42,21 @@
 
 //pid参数
 
-#define kp_pr1  0.05f
-#define kr_pr1  0.08f
-
-#define kp_pr2  0.05f
-#define kr_pr2  0.08f
-
-#define kp_pr3  0.02f
-#define kr_pr3  0.08f
-
-#define kp_pr4  0.02f
-#define kr_pr4  0.08f
 
 #define kp1 0.0005f
 #define ki1 0.001f
 #define kd1 0.0000f
 
 
-#define kp2 0.0846f
-#define ki2 0.022f
+#define kp2 2.0f
+#define ki2 10.0f
 #define kd2 0.0f
 
-#define kp3 0.8f
-#define ki3 0.08f
+#define kp3 2.0f
+#define ki3 10.0f
 #define kd3 0.0f
 
-#define kp4 0.0052f
-#define ki4 0.00024f
-#define kd4 0.0f
 
-#define kp5 0.016f
-#define ki5 0.0022f
-#define kd5 0.0f
-
-#define kp6 0.003f
-#define ki6 0.004f
-#define kd6 0.0f
-    
 
 //标志位变量
 extern uint16_t pll_is_locked;

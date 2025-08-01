@@ -64,7 +64,17 @@ void TIM2_IRQHandler(void) {
     // 锁相环计算
     abc_to_dq(ac_voltage_a, ac_voltage_b, ac_voltage_c, theta, &ac_voltage_d, &ac_voltage_q);
     pll(&pll_v, ac_voltage_q, &omega, &theta); // 电压锁相环
-
+    // 判断是否锁上环
+    if (fabsf(omega - h_pi) <= 1.0f)
+    {
+      pll_is_locked = 1;
+      LED0 = 1;
+    }
+    else
+    {
+      pll_is_locked = 0;
+      LED0 = 0;
+    }
     // 开关逻辑
     if (on_off) {
       if (reset_flag) {
@@ -99,54 +109,37 @@ void TIM3_IRQHandler(void) {
      
         OLED_Clear();
         key_command_callback(&key1); //按键回调函数，返回键值
-        //键入设定值
-        if ((key1.key_num >= '0' && key1.key_num <= '9') || key1.key_num == '.') {
-            if (buffer_index < sizeof(buffer) - 1) {
-            buffer[buffer_index++] = key1.key_num;
-            buffer[buffer_index] = '\0'; // Null-terminate the string
-            }
-        } else if (key1.key_num == 'S') {
-            if (buffer_index > 0) {
-            char *endptr;
-            float temp_value = strtof(buffer, &endptr); // Convert string to float with validation
-            if (*endptr == '\0') { // Check if the entire string was converted
-                target_frequent = temp_value;
-            } else {
-                // Handle invalid input (e.g., show an error message or reset the buffer)
-                OLED_ShowString(0, 0, "Invalid Input", OLED_8X16);
-            }
-            buffer_index = 0; // Reset buffer index
-            memset(buffer, 0, sizeof(buffer)); // Clear the buffer
-            }
-        } else if (key1.key_num == 'B') {
-            if (buffer_index > 0) {
-            buffer[--buffer_index] = '\0'; // Remove last character
-            }
-        }else if(key1.key_num == 'N')
+        if(mode==1)
         {
-            target_frequent+=1;
-        }
-        else if(key1.key_num == 'F')
+          if (key1.key_num == 'N')
+          {
+            target_frequent += 1;
+          }
+          else if (key1.key_num == 'F')
+          {
+            target_frequent -= 1;
+          }
+          OLED_ShowString(0, 0, "MODE: 1", OLED_8X16);
+          OLED_ShowString(0, 16, "F:", OLED_8X16);
+          OLED_ShowString(108, 16, "HZ", OLED_8X16);
+          // Display logic
+          if (target_frequent < 100 && target_frequent > 20)
+          {
+            OLED_ShowFloatNum(48, 16, target_frequent, 2, 2, OLED_8X16); // Show target value
+          }
+          else
+          {
+            OLED_ShowString(48, 16, "ERR", OLED_8X16); // Show error if out of range
+          }
+        }else if(mode==2)
         {
-            target_frequent-=1;
+          OLED_ShowString(0, 0, "MODE: 2", OLED_8X16);
         }
+
+        OLED_ShowString(0,32,"ON/OFF:",OLED_8X16);
+        if(on_off) OLED_ShowString(64,32,"ON",OLED_8X16);
+        else OLED_ShowString(64,32,"OFF",OLED_8X16);
         
-        OLED_ShowString(0,0,"F:",OLED_8X16);OLED_ShowString(108,0,"HZ",OLED_8X16);
-        // Display logic
-        if (buffer_index > 0) {
-            OLED_ShowString(48, 0, buffer, OLED_8X16); // Show buffer
-            OLED_ReverseArea(48, 0, 108, 16);
-        } else {
-            if (target_frequent < 100 && target_frequent > 20) {
-            OLED_ShowFloatNum(48, 0, target_frequent, 2, 2, OLED_8X16); // Show target value
-            } else {
-            OLED_ShowString(48, 0, "ERR", OLED_8X16); // Show error if out of range
-            }
-        }
-        
-        OLED_ShowString(0,16,"ON/OFF:",OLED_8X16);
-        if(on_off) OLED_ShowString(64,16,"ON",OLED_8X16);
-        else OLED_ShowString(64,16,"OFF",OLED_8X16);
        
         OLED_Update();
     

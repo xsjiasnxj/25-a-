@@ -7,7 +7,7 @@ char test_flag=0;
 char zero_flag=0;
 char on_off=0;
 char reset_flag=0;
-char mode=1;    //变流器1（逆变）模式；变流器2（整流）模式
+char mode=2;    //变流器1（逆变）模式；变流器2（整流）模式
 char protected_flag=0;
 char precharge=1;
 //vofa
@@ -25,8 +25,8 @@ uint16_t filter_cnt=0;
 uint16_t timer_cnt=0;
 
 //采样还原参数(k,b，补偿)
-float  sample2real_k[8] = {0.10737575f, 0.1062f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f};
-float  sample2real_b[8]={0.000f,0.000f,0.000f,0.0f,0.0f,0.0f,0.0f,0.0f};
+float  sample2real_k[8] = {-0.1062f, -0.1062f, 1.9569f, 1.9295f, 1.0f, 1.0f, 1.0f, 1.0f};
+float  sample2real_b[8]={0.000f,0.000f,0.000f,-0.17956f,0.13811f,0.0f,0.0f,0.0f};
 float  Compensation[8]={0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
 
 //外部库
